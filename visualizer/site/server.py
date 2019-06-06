@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 import mountainproject as mp
 
-app = Flask(__name__, static_folder="../static", template_folder="../templates")
+app = Flask(__name__, static_folder="static", template_folder="templates")
 
 @app.route("/")
 def index():
