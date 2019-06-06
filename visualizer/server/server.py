@@ -12,6 +12,3 @@ def ticks(user_id):
   client = mp.Client()
   user = client.users.get(user_id)
   return render_template("pyramid.html")
-
-if __name__ == "__main__":
-  app.run(debug=True)
