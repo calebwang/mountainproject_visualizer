@@ -2,13 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="/static/css/style.css"><style>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css"></link>
 </head>
 <body>
-    <div id="graphDiv"></div>
     <script src="/static/build/bundle.js"></script>
     <script>
-        // Our Custom D3 JavaScript here!
+      initVisualization({{ data | safe }});
     </script>
 </body>
 </html>
