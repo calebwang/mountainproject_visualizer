@@ -6,7 +6,9 @@ global.initVisualization = function(data) {
   document.body.appendChild(document.createTextNode(JSON.stringify(data, undefined, 4)));
 
   const ndx = crossfilter(data);
-  const dateDimension = ndx.dimension(function(d) { return new Date(d.date); }); 
+  const dateDimension = ndx.dimension(function(d) { 
+    return d3.timeWeek.floor(new Date(d.date));
+  }); 
   const dateGroup = dateDimension.group();
 
   const typeDimension = ndx.dimension(function(d) { return d.route_type });
@@ -17,9 +19,12 @@ global.initVisualization = function(data) {
   chart1
     .width(1000)
     .height(500)
-    .x(d3.scaleTime().domain([new Date(2018, 0, 1), new Date(2020, 0, 1)]))
     .dimension(dateDimension)
-    .group(dateGroup);
+    .group(dateGroup)
+    .x(d3.scaleTime().domain([new Date(2018, 0, 1), new Date(2020, 0, 1)]))
+    .round(d3.timeWeek.floor)
+    .xUnits(d3.timeWeeks);
+
   chart1.render();
 
   const chart2 = dc.rowChart("#chart2");
