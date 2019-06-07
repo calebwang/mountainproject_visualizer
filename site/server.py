@@ -1,3 +1,4 @@
+import calendar
 import json
 
 from flask import Flask, render_template
@@ -7,14 +8,15 @@ app = Flask(__name__, static_folder="static", template_folder="templates")
 
 @app.route("/")
 def index():
-  return "Hello World"
+  return ""
 
 def _tick_data(tick):
   return {
-    "date": tick.date,
-    "type": tick.route.type,
-    "grade": tick.route.grade,
-    "name": tick.route.name
+    "date": str(tick.date),
+    "name": tick.route.name,
+    "route_type": str(tick.route.type),
+    "grade": str(tick.route.grade),
+    "style": tick.style,
   }
 
 @app.route("/pyramid/<user_id>")
