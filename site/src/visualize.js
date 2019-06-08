@@ -93,13 +93,15 @@ function genRenderTickGradesByRouteType(ndx) {
       return route_type === target_route_type;
     });
 
-    const chart = dc.rowChart(chart_id);
+    const chart = dc.barChart(chart_id);
 
     chart
       .width(400)
-      .height(500)
+      .height(300)
       .dimension(routeTypeAndGradeDimension)
       .group(filteredGroup)
+      .x(d3.scaleBand())
+      .xUnits(dc.units.ordinal)
       .ordering(d => {
         const [route_type, grade] = d.key.split("|");
         return gradeOrdering(grade);
