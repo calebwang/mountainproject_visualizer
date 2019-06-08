@@ -107,6 +107,10 @@ function genRenderTickGradesByRouteType(ndx) {
         return gradeOrdering(grade);
       })
     ;
+    chart.xAxis().tickFormat(v => {
+      const [route_type, grade] = v.split("|");
+      return grade;
+    });
     chart.render();
 
   };
