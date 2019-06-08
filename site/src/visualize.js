@@ -52,7 +52,7 @@ function gradeOrdering(grade) {
     return +vMatch[1];
   }
 
-  const ydsMatch = grade.match(/5.(([0-9]+)[abcd+-]?)/);
+  const ydsMatch = grade.match(/5.(([0-9]+)[abcd]?)/);
   if (ydsMatch) {
     if (+ydsMatch[2] < 10) {
       return "0" + ydsMatch[1];
@@ -116,6 +116,42 @@ function genRenderTickGradesByRouteType(ndx) {
   };
 }
 
+function renderTickGrades(ndx, chart_id, valid_route_type_and_grade_pairs) {
+  const indexDimension = ndx.dimension(row => {
+    return valid_route_type_and_grade_pairs.indexOf(row.route_type + "|" + gradeGroup(row.grade));
+  });
+  const indexGroup = indexDimension.group().reduce(
+    (groupVal, row) => {
+      return groupVal + 1;
+    },
+    (groupVal, row) => {
+      return groupVal - 1;
+    },
+    () => {
+      return 0;
+    }
+  );
+  const filteredGroup = filterGroup(indexGroup, d => {
+    return d.key !== -1;
+  });
+
+  const chart = dc.barChart(chart_id);
+
+  chart
+    .width(400)
+    .height(300)
+    .dimension(indexDimension)
+    .group(filteredGroup)
+    .x(d3.scaleLinear().domain([0, valid_route_type_and_grade_pairs.length + 1]))
+    .xUnits(dc.units.integers)
+    .round(x => Math.floor(x) + 0.5)
+    .centerBar(true)
+    .alwaysUseRounding(true)
+  ;
+  chart.render();
+}
+
+
 global.initVisualization = function(data) {
   global.data = data;
   global.dc = dc;
@@ -128,7 +164,11 @@ global.initVisualization = function(data) {
   const chart1 = dc.barChart("#chart1");
   renderTicksByDate(chart1, ndx);
 
+  const boulderGrades = [
+    "Boulder|V0", "Boulder|V1", "Boulder|V2", "Boulder|V3", "Boulder|V4", "Boulder|V5", "Boulder|V6"
+  ];
+
   renderTickGradesByRouteType("#chart2", "Trad");
   renderTickGradesByRouteType("#chart3", "Sport");
-  renderTickGradesByRouteType("#chart4", "Boulder");
+  renderTickGrades(ndx, "#chart4", boulderGrades);
 }
