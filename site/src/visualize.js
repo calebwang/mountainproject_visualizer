@@ -20,7 +20,7 @@ function renderTicksByDate(chart, ndx) {
   );
 
   chart
-    .width(1000)
+    .width(1200)
     .height(500)
     .margins({ left: 100, right: 50, top: 10, bottom: 50 })
     .dimension(dateDimension)
@@ -62,35 +62,6 @@ function gradeOrdering(grade) {
   return grade;
 }
 
-function renderTickGrades(ndx) {
-  const routeTypeDimension = ndx.dimension(d => d.route_type);
-  const routeTypeGroupByGrade = dimension.group().reduce(
-    (groupVal, row) => {
-      const g = gradeGroup(row.grade)
-      groupVal[g] = (groupVal[g] || 0) + 1;
-      return groupVal;
-    },
-    (groupVal, row) => {
-      const g = gradeGroup(row.grade)
-      groupVal[g] = (groupVal[g] || 0) - 1;
-      return groupVal;
-    },
-    () => {
-      return {};
-    }
-  );
-}
-
-function filterGroupNonZero(group) {
-  return {
-    all: () => {
-      return group.all().filter(d => {
-        return d.value > 0; 
-      })
-    }
-  }
-}
-
 function filterGroup(group, pred) {
   return {
     all: () => {
@@ -101,47 +72,11 @@ function filterGroup(group, pred) {
   }
 }
 
-function genRenderTickGrades(ndx) {
-  const gradeDimension = ndx.dimension(d => gradeGroup(d.grade));
-  return (chart_id, route_type) => {
-    const gradeDimensionByRouteTypeGroup = gradeDimension.group().reduce(
-      (groupVal, row) => {
-        if (row.route_type === route_type) {
-          return groupVal + 1;
-        }
-        return groupVal;
-      },
-      (groupVal, row) => {
-        if (row.route_type === route_type) {
-          return groupVal - 1;
-        }
-        return groupVal;
-      },
-      () => {
-        return 0;
-      }
-    )
-
-    const chart = dc.rowChart(chart_id);
-
-    chart
-      .width(500)
-      .height(500)
-      .dimension(gradeDimension)
-      .group(gradeDimensionByRouteTypeGroup)
-      .ordering(d => gradeOrdering(d.key))
-    ;
-
-    chart.render();
-
-  }
-}
-
-function genRenderTickGradesByRouteTypeAndGrade(ndx) {
+function genRenderTickGradesByRouteType(ndx) {
   const routeTypeAndGradeDimension = ndx.dimension(row => {
-    row.route_type + "|" + gradeGroup(row.grade);
+    return row.route_type + "|" + gradeGroup(row.grade);
   });
-  return (chart, target_route_type) => {
+  return (chart_id, target_route_type) => {
     const dimensionGroupedByStyle = routeTypeAndGradeDimension.group().reduce(
       (groupVal, row) => {
         return groupVal + 1;
@@ -154,41 +89,25 @@ function genRenderTickGradesByRouteTypeAndGrade(ndx) {
       }
     );
     const filteredGroup = filterGroup(dimensionGroupedByStyle, d => {
-      return d.split("|")[0] === target_route_type;
+      const [route_type, grade] = d.key.split("|");
+      return route_type === target_route_type;
     });
 
+    const chart = dc.rowChart(chart_id);
+
     chart
-      .width(500)
+      .width(400)
       .height(500)
       .dimension(routeTypeAndGradeDimension)
       .group(filteredGroup)
+      .ordering(d => {
+        const [route_type, grade] = d.key.split("|");
+        return gradeOrdering(grade);
+      })
     ;
     chart.render();
 
   };
-}
-
-function genRenderTickGradesByRouteType(ndx) {
-  const typeStyleGradeDimension = ndx.dimension(d => {
-    return d.route_type + "|" + d.style + "|" + gradeGroup(d.grade)
-  });
-
-  return (chart, target_route_type) => {
-    const typeStyleGradeGroup = typeStyleGradeDimension.group();
-    const filteredRouteTypeGroup = filterGroup(typeStyleGradeGroup, d => {
-      const [route_type, style, grade] = d.key.split("|");
-      return route_type === target_route_type;
-    });
-
-    chart
-      .width(500)
-      .height(500)
-      .dimension(typeStyleGradeDimension)
-      .group(filteredRouteTypeGroup)
-    ;
-
-    chart.render();
-  }
 }
 
 global.initVisualization = function(data) {
@@ -199,20 +118,11 @@ global.initVisualization = function(data) {
   global.ndx = ndx;
   
   const renderTickGradesByRouteType = genRenderTickGradesByRouteType(ndx);
-
-  const renderTickGrades = genRenderTickGrades(ndx);
-  
   
   const chart1 = dc.barChart("#chart1");
   renderTicksByDate(chart1, ndx);
 
-  renderTickGrades("#chart2", "Sport");
-  const chart3 = dc.rowChart("#chart3");
-  genRenderTickGradesByRouteTypeAndGrade(ndx)(chart3, "Sport");
-
-  const chart4 = dc.rowChart("#chart4");
-  renderTickGradesByRouteType(chart4, "Sport");
-
-  const chart5 = dc.rowChart("#chart5");
-  renderTickGradesByRouteType(chart5, "Boulder");
+  renderTickGradesByRouteType("#chart2", "Trad");
+  renderTickGradesByRouteType("#chart3", "Sport");
+  renderTickGradesByRouteType("#chart4", "Boulder");
 }
