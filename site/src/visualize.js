@@ -27,7 +27,7 @@ function renderTicksByDate(chart, ndx) {
     .group(dateByRouteTypeGroup, routeTypes[0], d => d.value[routeTypes[0]])
     .stack(dateByRouteTypeGroup, routeTypes[1], d => d.value[routeTypes[1]])
     .stack(dateByRouteTypeGroup, routeTypes[2], d => d.value[routeTypes[2]])
-    .x(d3.scaleTime().domain([new Date(2018, 0, 1), new Date(2020, 0, 1)]))
+    .x(d3.scaleTime().domain([new Date(2017, 0, 1), new Date(2020, 0, 1)]))
     .round(d3.timeWeek.floor)
     .xUnits(d3.timeWeeks)
   ;
@@ -103,7 +103,6 @@ function genRenderTickGradesByRouteType(ndx) {
 
     const styles = new Set()
     filteredGroup.all().forEach(d => {
-      console.log(d);
       Object.keys(d.value).forEach(k => {
         styles.add(k);
       });
