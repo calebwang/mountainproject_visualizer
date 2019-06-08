@@ -42,6 +42,10 @@ function gradeGroup(grade) {
   if (vMatch) {
     return vMatch[0];
   }
+  const ydsMatch = grade.match(/5.(([0-9]+)[abcd]?)/);
+  if (ydsMatch) {
+    return ydsMatch[0];
+  }
   return grade;
 
 }
