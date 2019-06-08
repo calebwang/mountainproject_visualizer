@@ -79,13 +79,17 @@ function genRenderTickGradesByRouteType(ndx) {
   return (chart_id, target_route_type) => {
     const dimensionGroupedByStyle = routeTypeAndGradeDimension.group().reduce(
       (groupVal, row) => {
-        return groupVal + 1;
+        groupVal[row.style] = (groupVal[row.style] || 0) + 1; 
+        groupVal.count = (groupVal.count || 0) + 1;
+        return groupVal;
       },
       (groupVal, row) => {
-        return groupVal - 1;
+        groupVal[row.style] = (groupVal[row.style] || 0) - 1; 
+        groupVal.count = (groupVal.count || 0) - 1;
+        return groupVal;
       },
       () => {
-        return 0;
+        return {};
       }
     );
     const filteredGroup = filterGroup(dimensionGroupedByStyle, d => {
@@ -93,13 +97,23 @@ function genRenderTickGradesByRouteType(ndx) {
       return route_type === target_route_type;
     });
 
+    const styles = new Set()
+    filteredGroup.all().forEach(d => {
+      console.log(d);
+      Object.keys(d.value).forEach(k => {
+        styles.add(k);
+      });
+    });
+    styles.delete("count");
+    const stylesArray = Array.from(styles);
+
     const chart = dc.barChart(chart_id);
 
     chart
       .width(400)
       .height(300)
       .dimension(routeTypeAndGradeDimension)
-      .group(filteredGroup)
+      .group(filteredGroup, stylesArray[0], d => d.value[stylesArray[0]])
       .x(d3.scaleBand())
       .xUnits(dc.units.ordinal)
       .ordering(d => {
@@ -107,10 +121,15 @@ function genRenderTickGradesByRouteType(ndx) {
         return gradeOrdering(grade);
       })
     ;
+
+    for (let i = 1; i < stylesArray.length; i++) {
+      chart.stack(filteredGroup, stylesArray[i], d => d.value[stylesArray[i]]); 
+    }
     chart.xAxis().tickFormat(v => {
       const [route_type, grade] = v.split("|");
       return grade;
     });
+    chart.legend(dc.legend());
     chart.render();
 
   };
@@ -122,13 +141,17 @@ function renderTickGrades(ndx, chart_id, valid_route_type_and_grade_pairs) {
   });
   const indexGroup = indexDimension.group().reduce(
     (groupVal, row) => {
-      return groupVal + 1;
+      groupVal[row.style] = (groupVal[row.style] || 0) + 1; 
+      groupVal.count = (groupVal.count || 0) + 1;
+      return groupVal;
     },
     (groupVal, row) => {
-      return groupVal - 1;
+      groupVal[row.style] = (groupVal[row.style] || 0) - 1; 
+      groupVal.count = (groupVal.count || 0) - 1;
+      return groupVal;
     },
     () => {
-      return 0;
+      return {};
     }
   );
   const filteredGroup = filterGroup(indexGroup, d => {
@@ -137,17 +160,31 @@ function renderTickGrades(ndx, chart_id, valid_route_type_and_grade_pairs) {
 
   const chart = dc.barChart(chart_id);
 
+  const styles = new Set()
+  filteredGroup.all().forEach(d => {
+    Object.keys(d.value).forEach(k => {
+      styles.add(k);
+    });
+  });
+  styles.delete("count");
+  const stylesArray = Array.from(styles);
+
   chart
     .width(400)
     .height(300)
     .dimension(indexDimension)
-    .group(filteredGroup)
+    .group(filteredGroup, stylesArray[0], d => d.value[stylesArray[0]])
     .x(d3.scaleLinear().domain([0, valid_route_type_and_grade_pairs.length + 1]))
     .xUnits(dc.units.integers)
     .round(x => Math.floor(x) + 0.5)
     .centerBar(true)
     .alwaysUseRounding(true)
   ;
+
+  for (let i = 1; i < stylesArray.length; i++) {
+    chart.stack(filteredGroup, stylesArray[i], d => d.value[stylesArray[i]]); 
+  }
+  chart.legend(dc.legend());
   chart.render();
 }
 
