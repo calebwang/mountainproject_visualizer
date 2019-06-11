@@ -81,21 +81,7 @@ function genRenderTickGradesByRouteType(ndx) {
     return row.route_type + "|" + gradeGroup(row.grade);
   });
   return (chart_id, target_route_type) => {
-    const dimensionGroupedByStyle = routeTypeAndGradeDimension.group().reduce(
-      (groupVal, row) => {
-        groupVal[row.style] = (groupVal[row.style] || 0) + 1; 
-        groupVal.count = (groupVal.count || 0) + 1;
-        return groupVal;
-      },
-      (groupVal, row) => {
-        groupVal[row.style] = (groupVal[row.style] || 0) - 1; 
-        groupVal.count = (groupVal.count || 0) - 1;
-        return groupVal;
-      },
-      () => {
-        return {};
-      }
-    );
+    const dimensionGroupedByStyle = reduceGroupByStyle(routeTypeAndGradeDimension.group())
     const filteredGroup = filterGroup(dimensionGroupedByStyle, d => {
       const [route_type, grade] = d.key.split("|");
       return route_type === target_route_type;
@@ -138,11 +124,8 @@ function genRenderTickGradesByRouteType(ndx) {
   };
 }
 
-function renderTickGrades(ndx, chart_id, valid_route_type_and_grade_pairs) {
-  const indexDimension = ndx.dimension(row => {
-    return valid_route_type_and_grade_pairs.indexOf(row.route_type + "|" + gradeGroup(row.grade));
-  });
-  const indexGroup = indexDimension.group().reduce(
+function reduceGroupByStyle(group) {
+  return group.reduce(
     (groupVal, row) => {
       groupVal[row.style] = (groupVal[row.style] || 0) + 1; 
       groupVal.count = (groupVal.count || 0) + 1;
@@ -157,6 +140,13 @@ function renderTickGrades(ndx, chart_id, valid_route_type_and_grade_pairs) {
       return {};
     }
   );
+}
+
+function renderTickGrades(ndx, chart_id, valid_route_type_and_grade_pairs) {
+  const indexDimension = ndx.dimension(row => {
+    return valid_route_type_and_grade_pairs.indexOf(row.route_type + "|" + gradeGroup(row.grade));
+  });
+  const indexGroup = reduceGroupByStyle(indexDimension.group());
   const filteredGroup = filterGroup(indexGroup, d => {
     return d.key !== -1;
   });
