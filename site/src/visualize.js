@@ -27,7 +27,7 @@ function renderTicksByDate(chart_id, ndx) {
   chart
     .width(1000)
     .height(500)
-    .margins({ left: 100, right: 50, top: 10, bottom: 50 })
+    .margins({ left: 100, right: 0, top: 10, bottom: 50 })
     .dimension(dateDimension)
     .group(dateByRouteTypeGroup, routeTypes[0], d => d.value[routeTypes[0]])
     .stack(dateByRouteTypeGroup, routeTypes[1], d => d.value[routeTypes[1]])
@@ -106,7 +106,7 @@ function renderTickGrades(ndx, chart_id, valid_route_type_and_grade_pairs) {
   chart
     .width(500)
     .height(300)
-    .margins({ left: 100, right: 50, top: 10, bottom: 50 })
+    .margins({ left: 100, right: 0, top: 10, bottom: 50 })
     .dimension(indexDimension)
     .group(filteredGroup, stylesArray[0], d => d.value[stylesArray[0]])
     .x(d3.scaleLinear().domain([-0.5, valid_route_type_and_grade_pairs.length - 1]))
