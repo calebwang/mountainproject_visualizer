@@ -17,6 +17,7 @@ def _tick_data(tick):
     "route_type": str(tick.route.type),
     "grade": str(tick.route.grade),
     "style": tick.style,
+    "url": tick.route.url
   }
 
 @app.route("/pyramid/<user_id>")

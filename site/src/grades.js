@@ -27,4 +27,23 @@ export function gradeOrdering(grade) {
   return grade;
 }
 
+export function ydsGrades(route_type) {
+  const grades = [];
+  for (let i = 0; i < 10; i++) {
+    grades.push(route_type + "|5." + i);
+  }
+  for (let i = 10; i < 16; i++) {
+    for (let l of ["", "a", "b", "c", "d"]) {
+      grades.push(route_type + "|5." + i + l);
+    }
+  }
+  return grades;
+}
 
+export function vGrades() {
+  const grades = [];
+  for (let i = 0; i < 17; i++) {
+    grades.push("Boulder|V" + i);
+  }
+  return grades;
+}
