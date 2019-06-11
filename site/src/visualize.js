@@ -1,6 +1,8 @@
 import { default as dc, crossfilter, d3 } from "dc";
+import { gradeGroup, gradeOrdering } from "./grades";
+import { filterGroup } from "./utils"
 
-function renderTicksByDate(chart, ndx) {
+function renderTicksByDate(chart_id, ndx) {
   const routeTypes = ["Trad", "Sport", "Boulder"];
   const dateDimension = ndx.dimension(d => { 
     return d3.timeWeek.floor(new Date(d.date));
@@ -19,8 +21,10 @@ function renderTicksByDate(chart, ndx) {
     }
   );
 
+  const chart = dc.barChart(chart_id);
+
   chart
-    .width(1200)
+    .width(1000)
     .height(500)
     .margins({ left: 100, right: 50, top: 10, bottom: 50 })
     .dimension(dateDimension)
@@ -37,43 +41,27 @@ function renderTicksByDate(chart, ndx) {
   chart.render();
 }
 
-function gradeGroup(grade) {
-  const vMatch = grade.match(/^V([0-9]*)/);
-  if (vMatch) {
-    return vMatch[0];
-  }
-  const ydsMatch = grade.match(/5.(([0-9]+)[abcd]?)/);
-  if (ydsMatch) {
-    return ydsMatch[0];
-  }
-  return grade;
+function renderByType(chart_id, ndx) {
+  const dimension = ndx.dimension(d => d.route_type);
+  const group = dimension.group();
 
-}
-
-function gradeOrdering(grade) {
-  const vMatch = grade.match(/^V([0-9]*)/);
-  if (vMatch) {
-    return +vMatch[1];
-  }
-
-  const ydsMatch = grade.match(/5.(([0-9]+)[abcd]?)/);
-  if (ydsMatch) {
-    if (+ydsMatch[2] < 10) {
-      return "0" + ydsMatch[1];
-    }
-    return ydsMatch[1];
-  }
-  return grade;
-}
-
-function filterGroup(group, pred) {
-  return {
-    all: () => {
-      return group.all().filter(d => {
-        return pred(d);
-      })
-    }
-  }
+  const chart = dc.pieChart(chart_id);
+  
+  chart
+    .width(250)
+    .height(250)
+    .radius(100)
+    .dimension(dimension)
+    .group(group)
+    .label(d => {
+      const totalCount = dimension.groupAll().value();
+      if (totalCount > 0) {
+        return d.key + " (" + Math.floor(d.value / totalCount * 100) + "%)";  
+      }
+      return d.key;
+    })
+  ;
+  chart.render();
 }
 
 function genRenderTickGradesByRouteType(ndx) {
@@ -191,8 +179,8 @@ global.initVisualization = function(data) {
   
   const renderTickGradesByRouteType = genRenderTickGradesByRouteType(ndx);
   
-  const chart1 = dc.barChart("#chart1");
-  renderTicksByDate(chart1, ndx);
+  renderTicksByDate("#chart1", ndx);
+  renderByType("#chart-pie-type", ndx);
 
   const boulderGrades = [
     "Boulder|V0", "Boulder|V1", "Boulder|V2", "Boulder|V3", "Boulder|V4", "Boulder|V5", "Boulder|V6"
