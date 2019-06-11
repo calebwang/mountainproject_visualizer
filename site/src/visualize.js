@@ -106,6 +106,7 @@ function renderTickGrades(ndx, chart_id, valid_route_type_and_grade_pairs) {
   chart
     .width(400)
     .height(300)
+    .margins({ left: 100, right: 50, top: 10, bottom: 50 })
     .dimension(indexDimension)
     .group(filteredGroup, stylesArray[0], d => d.value[stylesArray[0]])
     .x(d3.scaleLinear().domain([-0.5, valid_route_type_and_grade_pairs.length - 1]))
