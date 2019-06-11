@@ -15,7 +15,7 @@ def _tick_data(tick):
     "date": str(tick.date),
     "name": tick.route.name,
     "route_type": str(tick.route.type),
-    "grade": str(tick.route.grade),
+    "grade": str(tick.grade),
     "style": tick.style,
     "url": tick.route.url
   }
