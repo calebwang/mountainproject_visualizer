@@ -132,7 +132,16 @@ function renderDataTable(ndx, chart_id) {
   table
     .dimension(dimension)
     .size(100)
-    .columns(["date", "name", { label: "Type", format: d => d["route_type"] }, "grade", "style", { label: "URL", format: d => d["url"] }])
+    .columns([
+      "date", 
+      "name", 
+      { label: "Type", format: d => d["route_type"] }, 
+      "grade", "style", 
+      { 
+        label: "URL", 
+        format: d => d["url"] 
+      }
+    ])
     .on("renderlet", function (table) {
       table.selectAll(".dc-table-group").classed("info", true);
     });
