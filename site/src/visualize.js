@@ -114,6 +114,7 @@ function renderTickGrades(ndx, chart_id, valid_route_type_and_grade_pairs) {
     .round(x => Math.floor(x) + 0.5)
     .centerBar(true)
     .alwaysUseRounding(true)
+    .hidableStacks(true)
   ;
   chart.xAxis().tickFormat(idx => {
     const bucket = valid_route_type_and_grade_pairs[idx];
@@ -123,6 +124,18 @@ function renderTickGrades(ndx, chart_id, valid_route_type_and_grade_pairs) {
   for (let i = 1; i < stylesArray.length; i++) {
     chart.stack(filteredGroup, stylesArray[i], d => d.value[stylesArray[i]]); 
   }
+  // Hack into internals to improve redraw behavior
+  chart.legendToggle = function (d) {
+    if (chart.isLegendableHidden(d)) {
+        chart.showStack(d.name);
+    } else {
+        chart.hideStack(d.name);
+    }
+
+    chart.render();
+  };
+
+
   chart.legend(dc.legend());
   chart.render();
 }
