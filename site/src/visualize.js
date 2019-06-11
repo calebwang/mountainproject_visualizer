@@ -104,7 +104,7 @@ function renderTickGrades(ndx, chart_id, valid_route_type_and_grade_pairs) {
   const stylesArray = Array.from(styles);
 
   chart
-    .width(500)
+    .width(450)
     .height(300)
     .margins({ left: 100, right: 0, top: 10, bottom: 50 })
     .dimension(indexDimension)
