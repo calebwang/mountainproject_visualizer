@@ -135,6 +135,9 @@ function renderTickGrades(ndx, chart_id, valid_route_type_and_grade_pairs) {
     chart.render();
   };
 
+  chart.hideStack("Attempt");
+  chart.hideStack("Fell/Hung");
+
 
   chart.legend(dc.legend());
   chart.render();
