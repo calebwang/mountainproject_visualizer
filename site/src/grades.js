@@ -17,12 +17,18 @@ export function gradeOrdering(grade) {
     return +vMatch[1];
   }
 
-  const ydsMatch = grade.match(/5.(([0-9]+)[abcd]?)/);
+  const ydsMatch = grade.match(/5.([0-9]+)([abcd+-]?)/);
   if (ydsMatch) {
-    if (+ydsMatch[2] < 10) {
+    if (+ydsMatch[1] < 10) {
       return "0" + ydsMatch[1];
     }
-    return ydsMatch[1];
+    if (ydsMatch[2] === "-" || ydsMatch[2] === "") {
+      return ydsMatch[1] + "a";
+    } else if (ydsMatch[2] === "+") {
+      return ydsMatch[1] + "d";
+    } else {
+      return ydsMatch[1] + ydsMatch[2];
+    }
   }
   return grade;
 }
@@ -33,7 +39,7 @@ export function ydsGrades(route_type) {
     grades.push(route_type + "|5." + i);
   }
   for (let i = 10; i < 16; i++) {
-    for (let l of ["", "a", "b", "c", "d"]) {
+    for (let l of ["a", "b", "c", "d"]) {
       grades.push(route_type + "|5." + i + l);
     }
   }
