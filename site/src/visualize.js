@@ -181,7 +181,7 @@ global.initVisualization = function(data) {
 
   const sportGrades = ydsGrades("Sport");
   const tradGrades = ydsGrades("Trad");
-  renderTickGrades(ndx, "#chart2", tradGrades.slice(0, tradGrades.indexOf("Trad|5.11")));
+  renderTickGrades(ndx, "#chart2", tradGrades.slice(0, tradGrades.indexOf("Trad|5.12a")));
   renderTickGrades(ndx, "#chart3", sportGrades.slice(sportGrades.indexOf("Sport|5.7"), sportGrades.indexOf("Sport|5.14a")));
   renderTickGrades(ndx, "#chart4", vGrades().slice(0, 10));
 
