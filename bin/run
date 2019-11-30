@@ -1,6 +1,0 @@
-#!/bin/bash
-source virtualenv/bin/activate
-cd site && npm run build;
-cd ..
-FLASK_APP=site/server.py flask run
-

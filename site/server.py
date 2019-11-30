@@ -52,3 +52,6 @@ def ticks(user_id):
     _tick_data(tick) for tick in ticks
   ])
   return render_template("pyramid.html", data=data)
+
+if __name__ == "__main__":
+  app.run()
