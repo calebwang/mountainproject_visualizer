@@ -2,6 +2,8 @@ Route pyramid visualizer built using dc.js and flask.
 
 ![demo.png](demo.png)
 
+Currently deployed at `http://mountainproject.caleb.wang/pyramid/<mountain_project_user_id>`.
+
 Installation
  - Install python and node
  - `pip install -r requirements.txt` 
