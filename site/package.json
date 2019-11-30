@@ -1,5 +1,5 @@
 {
-  "name": "pyramid_visualizer",
+  "name": "mountainproject_visualization",
   "version": "1.0.0",
   "dependencies": {
     "dc": "^3.0.12"

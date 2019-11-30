@@ -1,5 +1,6 @@
 #!/bin/bash
 python3 -m venv virtualenv
 source virtualenv/bin/activate
-pip3 install flask
-
+pip3 install -r requirements.txt
+sudo apt-get install npm
+npm install
