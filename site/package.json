@@ -1,9 +1,8 @@
 {
-  "name": "mountainproject_visualization",
+  "name": "mountainproject_visualizer",
   "version": "1.0.0",
   "dependencies": {
-    "dc": "^3.0.12",
-    "crossfilter2": "1.5.0"
+    "dc": "3.0.12"
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
