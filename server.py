@@ -37,7 +37,7 @@ def dedupe_ticks(ticks):
   )
   results_set= set()  
   results = []
-  for tick in ticks:
+  for tick in sorted_ticks:
     if tick.route_id not in results_set:
       results.append(tick)
       results_set.add(tick.route_id)
