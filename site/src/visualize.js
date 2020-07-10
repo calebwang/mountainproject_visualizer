@@ -148,7 +148,7 @@ function renderDataTable(ndx, chart_id) {
   const dimension = ndx.dimension(getDateDimension);
   table
     .dimension(dimension)
-    .size(100)
+    .size(200)
     .columns([
       "date", 
       "name", 
