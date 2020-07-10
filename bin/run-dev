@@ -1,3 +1,4 @@
 #!/bin/bash
+cd site && npm run watch &
 source "$(dirname $0)"/../virtualenv/bin/activate
 FLASK_DEBUG=1 FLASK_APP="$(dirname $0)/../server.py" flask run

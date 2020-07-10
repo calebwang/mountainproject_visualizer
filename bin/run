@@ -1,2 +1,3 @@
+cd site && npm run build
 source virtualenv/bin/activate
 uwsgi --socket 0.0.0.0:5000 -w server:app &
